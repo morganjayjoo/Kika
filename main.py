@@ -286,3 +286,75 @@ def cmd_band_stats(w3, contract, args) -> None:
     print(f"  mild:     {mild}")
     print(f"  warm:     {warm}")
     print(f"  hot:     {hot}")
+    print(f"  critical: {critical}")
+    print("  " + "-" * 40)
+
+
+# -----------------------------------------------------------------------------
+# Commands: symbol
+# -----------------------------------------------------------------------------
+def cmd_symbol(w3, contract, args) -> None:
+    sym = args.symbol
+    if not sym:
+        print("Provide --symbol", file=sys.stderr)
+        sys.exit(1)
+    try:
+        h = contract.functions.symbolHashFromString(sym).call()
+        summary = contract.functions.getSummaryForSymbol(h).call()
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    (current_price, current_vol, current_band, min_p, max_p, hist_len, halted, last_block) = summary
+    print(f"\n  Symbol: {sym}")
+    print("  " + "-" * 50)
+    print(f"  Current price (E8):  {current_price}  ({fmt_price_e8(current_price)})")
+    print(f"  Volatility (E8):    {current_vol}  ({fmt_volatility_bps(current_vol)})")
+    print(f"  Band:               {current_band} ({band_name(current_band)})")
+    print(f"  Min price (window): {min_p}  ({fmt_price_e8(min_p)})")
+    print(f"  Max price (window): {max_p}  ({fmt_price_e8(max_p)})")
+    print(f"  History length:     {hist_len}")
+    print(f"  Halted:             {halted}")
+    print(f"  Last report block:  {last_block}")
+    print("  " + "-" * 50)
+
+
+# -----------------------------------------------------------------------------
+# Commands: list
+# -----------------------------------------------------------------------------
+def cmd_list(w3, contract, args) -> None:
+    try:
+        hashes = contract.functions.getRegisteredSymbols().call()
+        count = contract.functions.getSlotsCount().call()
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    print(f"\n  Registered symbols ({count})\n")
+    symbol_map = get_config("symbol_map") or {}
+    for h in hashes:
+        hex_h = hash_to_hex(h) if hasattr(h, "hex") else str(h)
+        label = symbol_map.get(hex_h, hex_h[:20] + "..")
+        print(f"    {label}")
+    print()
+
+
+# -----------------------------------------------------------------------------
+# Commands: thresholds
+# -----------------------------------------------------------------------------
+def cmd_thresholds(w3, contract, args) -> None:
+    try:
+        cold, mild, warm, hot = contract.functions.getThresholds().call()
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    print("\n  Volatility band thresholds (bps)")
+    print("  " + "-" * 40)
+    print(f"  cold:     0 - {cold}")
+    print(f"  mild:     {cold} - {mild}")
+    print(f"  warm:     {mild} - {warm}")
+    print(f"  hot:      {warm} - {hot}")
+    print(f"  critical: {hot} - 10000")
+    print("  " + "-" * 40)
+
+
+# -----------------------------------------------------------------------------
+# Commands: config (contract)
