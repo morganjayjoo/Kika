@@ -214,3 +214,75 @@ def fmt_price_e8(price_e8: int) -> str:
 
 
 def fmt_volatility_bps(vol_e8: int) -> str:
+    if vol_e8 == 0:
+        return "0"
+    bps = (vol_e8 * BPS_BASE) // E8
+    return f"{bps} bps"
+
+
+def fmt_eth(wei: int | str) -> str:
+    try:
+        w = int(wei)
+        return f"{w / 1e18:.6f} ETH"
+    except (ValueError, TypeError):
+        return str(wei)
+
+
+def truncate_addr(addr: str, head: int = 6, tail: int = 4) -> str:
+    if not addr or len(addr) < head + tail + 2:
+        return addr or ""
+    return f"{addr[: head + 2]}...{addr[-tail:]}"
+
+
+def band_name(band: int) -> str:
+    if 0 <= band < len(BAND_NAMES):
+        return BAND_NAMES[band]
+    return f"band_{band}"
+
+
+def hash_to_hex(h: bytes) -> str:
+    if hasattr(h, "hex"):
+        return "0x" + h.hex()
+    return str(h)
+
+
+# -----------------------------------------------------------------------------
+# Commands: summary
+# -----------------------------------------------------------------------------
+def cmd_summary(w3, contract, args) -> None:
+    try:
+        hashes, bands, vols, prices = contract.functions.getHeatSummary().call()
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    if not hashes:
+        print("No thermometers registered.")
+        return
+    symbol_map = get_config("symbol_map") or {}
+    print(f"\n  Heat summary ({len(hashes)} thermometers)\n")
+    print("  " + "-" * 72)
+    for i, h in enumerate(hashes):
+        hex_h = hash_to_hex(h) if hasattr(h, "hex") else str(h)
+        label = symbol_map.get(hex_h, hex_h[:18] + ".." if len(hex_h) > 18 else hex_h)
+        band = bands[i] if i < len(bands) else 0
+        vol = vols[i] if i < len(vols) else 0
+        pr = prices[i] if i < len(prices) else 0
+        print(f"  {label:24}  band={band_name(band):10}  vol={fmt_volatility_bps(vol):12}  price={fmt_price_e8(pr)}")
+    print("  " + "-" * 72)
+
+
+# -----------------------------------------------------------------------------
+# Commands: band-stats
+# -----------------------------------------------------------------------------
+def cmd_band_stats(w3, contract, args) -> None:
+    try:
+        cold, mild, warm, hot, critical = contract.functions.getBandStats().call()
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    print("\n  Band distribution")
+    print("  " + "-" * 40)
+    print(f"  cold:     {cold}")
+    print(f"  mild:     {mild}")
+    print(f"  warm:     {warm}")
+    print(f"  hot:     {hot}")
