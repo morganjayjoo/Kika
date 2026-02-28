@@ -70,3 +70,75 @@ THRMINOS_ABI = [
         {"internalType": "uint256[]", "name": "blocks", "type": "uint256[]"}
     ], "stateMutability": "view", "type": "function"},
     {"inputs": [], "name": "getBandStats", "outputs": [
+        {"internalType": "uint256", "name": "coldCount", "type": "uint256"},
+        {"internalType": "uint256", "name": "mildCount", "type": "uint256"},
+        {"internalType": "uint256", "name": "warmCount", "type": "uint256"},
+        {"internalType": "uint256", "name": "hotCount", "type": "uint256"},
+        {"internalType": "uint256", "name": "criticalCount", "type": "uint256"}
+    ], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "platformPaused", "outputs": [{"internalType": "bool", "name": "", "type": "bool"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [{"internalType": "bytes32", "name": "symbolHash", "type": "bytes32"}], "name": "isHalted", "outputs": [{"internalType": "bool", "name": "", "type": "bool"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getReportFeeWei", "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getContractBalance", "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [{"internalType": "uint8", "name": "band", "type": "uint8"}], "name": "bandLabel", "outputs": [{"internalType": "string", "name": "", "type": "string"}], "stateMutability": "pure", "type": "function"},
+    {"inputs": [], "name": "getHottestSymbol", "outputs": [
+        {"internalType": "bytes32", "name": "symbolHash", "type": "bytes32"},
+        {"internalType": "uint8", "name": "band", "type": "uint8"},
+        {"internalType": "uint256", "name": "volatilityE8", "type": "uint256"}
+    ], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getColdestSymbol", "outputs": [
+        {"internalType": "bytes32", "name": "symbolHash", "type": "bytes32"},
+        {"internalType": "uint8", "name": "band", "type": "uint8"},
+        {"internalType": "uint256", "name": "volatilityE8", "type": "uint256"}
+    ], "stateMutability": "view", "type": "function"},
+    {"inputs": [{"internalType": "bytes32", "name": "symbolHash", "type": "bytes32"}], "name": "canReport", "outputs": [{"internalType": "bool", "name": "", "type": "bool"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getConfigSnapshot", "outputs": [
+        {"internalType": "address", "name": "ownerAddr", "type": "address"},
+        {"internalType": "address", "name": "treasuryAddr", "type": "address"},
+        {"internalType": "address", "name": "guardianAddr", "type": "address"},
+        {"internalType": "address", "name": "updaterAddr", "type": "address"},
+        {"internalType": "uint256", "name": "deployBlk", "type": "uint256"},
+        {"internalType": "uint256", "name": "coldBpsVal", "type": "uint256"},
+        {"internalType": "uint256", "name": "mildBpsVal", "type": "uint256"},
+        {"internalType": "uint256", "name": "warmBpsVal", "type": "uint256"},
+        {"internalType": "uint256", "name": "hotBpsVal", "type": "uint256"},
+        {"internalType": "uint256", "name": "reportFee", "type": "uint256"},
+        {"internalType": "uint256", "name": "maxHistLen", "type": "uint256"},
+        {"internalType": "bool", "name": "paused", "type": "bool"}
+    ], "stateMutability": "view", "type": "function"},
+    {"inputs": [{"internalType": "bytes32", "name": "symbolHash", "type": "bytes32"}], "name": "getSummaryForSymbol", "outputs": [
+        {"internalType": "uint256", "name": "currentPriceE8", "type": "uint256"},
+        {"internalType": "uint256", "name": "currentVolatilityE8", "type": "uint256"},
+        {"internalType": "uint8", "name": "currentBand", "type": "uint8"},
+        {"internalType": "uint256", "name": "minPriceE8", "type": "uint256"},
+        {"internalType": "uint256", "name": "maxPriceE8", "type": "uint256"},
+        {"internalType": "uint256", "name": "historyLength", "type": "uint256"},
+        {"internalType": "bool", "name": "halted", "type": "bool"},
+        {"internalType": "uint256", "name": "lastReportBlock", "type": "uint256"}
+    ], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getSlotsCount", "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getGlobalReportSequence", "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [{"internalType": "bytes32", "name": "symbolHash", "type": "bytes32"}, {"internalType": "uint256", "name": "blockNum", "type": "uint256"}], "name": "getPriceAtBlock", "outputs": [{"internalType": "uint256", "name": "priceE8", "type": "uint256"}, {"internalType": "bool", "name": "found", "type": "bool"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [{"internalType": "bytes32", "name": "symbolHash", "type": "bytes32"}, {"internalType": "uint256", "name": "fromBlock", "type": "uint256"}, {"internalType": "uint256", "name": "toBlock", "type": "uint256"}], "name": "getPriceChangeBps", "outputs": [{"internalType": "int256", "name": "changeBps", "type": "int256"}, {"internalType": "bool", "name": "fromFound", "type": "bool"}, {"internalType": "bool", "name": "toFound", "type": "bool"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getGenesisHash", "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "getDeployBlock", "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}], "stateMutability": "view", "type": "function"},
+]
+
+# -----------------------------------------------------------------------------
+# Config
+# -----------------------------------------------------------------------------
+def config_path() -> Path:
+    base = os.environ.get("KIKA_CONFIG_DIR") or os.path.expanduser("~")
+    return Path(base) / CONFIG_FILENAME
+
+
+def load_config() -> dict[str, Any]:
+    path = config_path()
+    if not path.exists():
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return {}
+
